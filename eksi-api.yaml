@@ -1,0 +1,289 @@
+swagger: '2.0'
+info:
+  description: >-
+    Ekşi sözlük'ün public olmayan apiyı. Bunu kullanmanın size yasal
+    yaptırımları olabilir. Bunu kullanan kişiler bu riski göze almış olarak
+    düşünülür.
+  version: 1.0.0
+  title: Ekşi Sözlük Unofficial API
+  termsOfService: 'https://eksisozluk.com/api-eksisozluk-com--2638424'
+  contact:
+    email: reklam@eksisozluk.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: api.eksisozluk.com
+basePath: /v1
+tags:
+  - name: user
+    description: User endpointleri
+  - name: topic
+    description: Topic endpointleri
+  - name: entry
+    description: Entry endpointleri
+schemes:
+  - https
+paths:
+  '/user/{username}':
+    get:
+      tags:
+        - user
+      summary: Suserin tüm bilgilerini getirir.
+      description: ''
+      operationId: getUserByName
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/user/{username}/favorited':
+    get:
+      tags:
+        - user
+      summary: Suserin favorilenen entrylerini getirir
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/GeneralResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/user/{username}/favorites':
+    get:
+      tags:
+        - user
+      summary: Suserin favori entrylerini getirir
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/GeneralResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/entry/{entryId}/favorites':
+    get:
+      tags:
+        - entry
+      summary: Entryi favorileyen suserları getirtir.
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/FavoritesResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/entry/{entryId}/caylakfavorites':
+    get:
+      tags:
+        - entry
+      summary: Entryi favorileyen caylakları getirir.
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/CaylakFavoritesResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  Karma:
+    type: object
+    properties:
+      Name:
+        type: string
+      Value:
+        type: integer
+  UserIdentifier:
+    type: object
+    properties:
+      Nick:
+        type: string
+      Id:
+        type: integer
+  UserInfo:
+    type: object
+    properties:
+      UserIdentifier:
+        $ref: '#/definitions/UserIdentifier'
+      RemainingInvitation:
+        type: integer
+      TwitterScreenName:
+        type: string
+      FacebookProfileUrl:
+        type: string
+      FacebookScreenName:
+        type: string
+      InstagramScreenName:
+        type: string
+      InstagramProfileUrl:
+        type: string
+      Karma:
+        $ref: '#/definitions/Karma'
+      LastEntryDate:
+        type: string
+        format: date-time
+      IsCaylak:
+        type: boolean
+  Badges:
+    type: object
+    properties:
+      Name:
+        type: string
+      Description:
+        type: string
+  User:
+    type: object
+    properties:
+      UserInfo:
+        $ref: '#/definitions/UserInfo'
+      Badges:
+        type: array
+        items:
+          $ref: '#/definitions/Badges'
+      HasEntryUsedOnSeyler:
+        type: boolean
+      FollowerCount:
+        type: integer
+      FollowingsCount:
+        type: integer
+      Picture:
+        type: string
+  Author:
+    type: object
+    properties:
+      Nick:
+        type: string
+  Entry:
+    type: object
+    properties:
+      Id:
+        type: integer
+      Content:
+        type: string
+      Author:
+        $ref: '#/definitions/Author'
+      Created:
+        type: string
+        format: date-time
+      LastUpdated:
+        type: string
+        format: date-time
+      FavoriteCount:
+        type: integer
+  TopicId:
+    type: object
+    properties:
+      Id:
+        type: integer
+      Title:
+        type: string
+  EntryWithTopic:
+    type: object
+    properties:
+      TopicId:
+        $ref: '#/definitions/TopicId'
+      Entry:
+        $ref: '#/definitions/Entry'
+  GeneralResponse:
+    type: object
+    properties:
+      Entries:
+        type: array
+        items:
+          $ref: '#/definitions/EntryWithTopic'
+      PageCount:
+        type: integer
+      PageSize:
+        type: integer
+      PageIndex:
+        type: integer
+  FavoritesResponse:
+    type: object
+    properties:
+      EntryId:
+        type: integer
+      Authors:
+        type: array
+        items:
+          $ref: '#/definitions/Author'
+  CaylakFavoritesResponse:
+    type: object
+    properties:
+      EntryId:
+        type: integer
+      Caylaks:
+        type: array
+        items:
+          $ref: '#/definitions/Author'
