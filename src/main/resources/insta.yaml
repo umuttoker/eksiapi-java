@@ -1,0 +1,169 @@
+swagger: "2.0"
+info:
+  description: "Insta public user info api"
+  version: "1.0.0"
+  title: "Insta Public"
+  termsOfService: "asd"
+  contact:
+    email: "asd@asd.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "www.instagram.com"
+tags:
+- name: "user"
+  description: "User endpointleri"
+paths:
+  /{username}/:
+    get:
+      tags:
+      - "user"
+      summary: "Suserin tüm bilgilerini getirir."
+      description: ""
+      operationId: "getUserInfo"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "__a"
+        in: "query"
+        required: true
+        default: 1
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserInfo"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+definitions:
+  FollowCount:
+    type: object
+    properties:
+      count:
+        type: integer
+  Dimentions:
+    type: object
+    properties:
+      height:
+        type: integer
+      width:
+        type: integer
+  ThumbnailResource:
+    type: object
+    properties:
+      src:
+        type: string
+      config_width:
+        type: integer
+      config_height:
+        type: integer
+  Node:
+    type: object
+    properties:
+      __typename:
+        type: string
+      id:
+        type: string
+      comments_disabled:
+        type: boolean
+      dimensions:
+        $ref: '#/definitions/Dimentions'
+      media_preview:
+        type: string
+      thumbnail_src:
+        type: string
+      thumbnail_resources:
+        type: array
+        items:
+          $ref: '#/definitions/ThumbnailResource'
+      is_video:
+        type: boolean
+      code:
+        type: string
+      date:
+        type: string
+      display_src:
+        type: string
+      caption:
+        type: string
+      comments:
+        $ref: '#/definitions/FollowCount'
+      likes:
+        $ref: '#/definitions/FollowCount'
+  PageInfo:
+    type: object
+    properties:
+      has_next_page:
+        type: boolean
+      end_cursor:
+        type: string
+  Media:
+    type: object
+    properties:
+      count:
+        type: integer
+      nodes:
+        type: array
+        items:
+          $ref: '#/definitions/Node'
+      page_info:
+        $ref: '#/definitions/PageInfo'
+  User:
+    type: "object"
+    properties:
+      biography:
+        type: string
+      blocked_by_viewer:
+        type: string
+      country_block:
+        type: string
+      external_url:
+        type: string
+      external_url_linkshimmed:
+        type: string
+      followed_by_viewer:
+        type: boolean
+      followed_by:
+        $ref: '#/definitions/FollowCount'
+      follows:
+        $ref: '#/definitions/FollowCount'
+      follows_viewer:
+        type: boolean
+      full_name:
+        type: string
+      has_blocked_viewer:
+        type: boolean
+      has_requested_viewer:
+        type: boolean
+      id:
+        type: string
+      is_private:
+        type: boolean
+      is_verified:
+        type: boolean
+      profile_pic_url:
+        type: string
+      profile_pic_url_hd:
+        type: string
+      requested_by_viewer:
+        type: boolean
+      username:
+        type: string
+      connected_fb_page:
+        type: string
+      media:
+        $ref: '#/definitions/Media'
+  UserInfo:
+    type: "object"
+    properties:
+      user:
+        $ref: '#/definitions/User'
+      logging_page_id:
+        type: string

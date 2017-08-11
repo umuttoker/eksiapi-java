@@ -1,0 +1,1157 @@
+swagger: '2.0'
+info:
+  description: >-
+    Ekşi sözlük'ün public olmayan apiyı. Bunu kullanmanın size yasal
+    yaptırımları olabilir. Bunu kullanan kişiler bu riski göze almış olarak
+    düşünülür.
+  version: 1.0.0
+  title: Ekşi Sözlük UnPublic API
+  termsOfService: 'https://eksisozluk.com/api-eksisozluk-com--2638424'
+  contact:
+    email: umt.toker@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: api.eksisozluk.com
+tags:
+  - name: auth
+    description: token falanlar
+  - name: user
+    description: User methodlari
+  - name: topic
+    description: Topic methodlari
+  - name: entry
+    description: Entry methodlari
+  - name: message
+    description: mesaj methodlari
+  - name: autocomplate
+    description: autocomplate methodlari
+  - name: settings
+    description: settings methodlari
+schemes:
+  - https
+paths:
+  '/token':
+    post:
+      tags:
+        - auth
+      summary: access token dondurur
+      description: kullanici adi kismina email girmek daha saglikli olur
+      operationId: getAccessToken
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters: 
+        - name: grant_type
+          type: string
+          in: formData
+          default: password
+        - name: username
+          type: string
+          in: formData
+        - name: password
+          type: string
+          in: formData
+        - name: client_secret
+          type: string
+          in: formData
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/TokenResponse' 
+  '/v1/user/{username}':
+    get:
+      tags:
+        - user
+      summary: Suserin tüm bilgilerini getirir.
+      operationId: getUserByName
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/v1/user/{username}/bestentries':
+    get:
+      tags:
+        - user
+      summary: Suserin en iyi entrylerini getirir
+      operationId: getBestEntries
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GeneralResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: not found
+      security:
+        - api_key: []
+  '/v1/user/{username}/lastvoted':
+    get:
+      tags:
+        - user
+      summary: Suserin son oylanan entrylerini getirir
+      operationId: getLastVotedEntries
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GeneralResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: not found
+      security:
+        - api_key: []
+  '/v1/user/{username}/favorited':
+    get:
+      tags:
+        - user
+      summary: Suserin favorilenen entrylerini getirir
+      operationId: getFavoritedEntries
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GeneralResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/v1/user/{username}/favorites':
+    get:
+      tags:
+        - user
+      summary: Suserin favori entrylerini getirir
+      operationId: getFavoriEntries
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GeneralResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/v1/user/{username}/selffavorited':
+    get:
+      tags:
+        - user
+      summary: Suserin el emegi goznuru entrylerini getirir
+      operationId: getSelfFavoritedEntries
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GeneralResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: not found
+      security:
+        - api_key: []
+  '/v1/topic/{topicId}':
+    get:
+      tags:
+        - topic
+      summary: basligin entrylerini getirir
+      operationId: getTopic
+      produces:
+        - application/json
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Topic'
+      security:
+        - api_key: []
+  '/v1/topic/follow/{topicId}':
+    get:
+      tags:
+        - topic
+      summary: basligi takip et
+      operationId: follow
+      produces:
+        - application/json
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+      security:
+        - api_key: []
+  '/v1/topic/unfollow/{topicId}':
+    get:
+      tags:
+        - topic
+      summary: basligi takibi birak
+      operationId: unfollow
+      produces:
+        - application/json
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+      security:
+        - api_key: []
+  '/v1/topic/{topicId}/search/{term}':
+    get:
+      tags:
+        - topic
+      summary: baslikta arar
+      operationId: search
+      description: Eger term @ ile baslarsa bu bi suser nickidir ve suserin o basliktaki entrylerini getirir
+      produces:
+        - application/json
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          type: string
+        - name: term
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Topic'
+      security:
+        - api_key: []
+  '/v1/topic/{topicId}/links':
+    get:
+      tags:
+        - topic
+      summary: baslitaki linkleri getirir
+      operationId: getLinks
+      produces:
+        - application/json
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Topic'
+      security:
+        - api_key: []
+  '/v1/topic/{topicId}/buddies':
+    get:
+      tags:
+        - topic
+      summary: baslitaki buddy entrylerini getirir
+      operationId: getBuddyEntries
+      produces:
+        - application/json
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Topic'
+      security:
+        - api_key: []
+  '/v1/topic/{topicId}/allnice':
+    get:
+      tags:
+        - topic
+      summary: tum zamanlarin sukelalari
+      operationId: getNices
+      produces:
+        - application/json
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Topic'
+      security:
+        - api_key: []
+  '/v1/topic/{topicId}/dailynice':
+    get:
+      tags:
+        - topic
+      summary: gunun sukelalari
+      operationId: getDailyNices
+      produces:
+        - application/json
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          type: string
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Topic'
+      security:
+        - api_key: []
+  '/v1/topic/query':
+    get:
+      tags:
+        - topic
+      summary: textle baslik id si doner
+      operationId: getTopicIdFromSlug
+      description: Autocomplateden sonra cagirmak lazim gibi gibi
+      produces:
+        - application/json
+      parameters:
+        - name: term
+          in: query
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/TopicQueryResponse'
+      security:
+        - api_key: []
+  '/v1/entry/{entryId}':
+    get:
+      tags:
+        - entry
+      summary: ilgili entryi getirir.
+      operationId: getEntry
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Topic'
+        '400':
+          description: Invalid entryid
+        '404':
+          description: Entry not found
+      security:
+        - api_key: []
+  '/v1/entry/{entryId}/favorite':
+    post:
+      tags:
+        - entry
+      summary: entryi favoriler.
+      operationId: favorite
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid entryid
+        '404':
+          description: Entry not found
+      security:
+        - api_key: []
+  '/v1/entry/{entryId}/unfavorite':
+    post:
+      tags:
+        - entry
+      summary: entryi favorilemeyi birakir.
+      operationId: unfavorite
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid entryid
+        '404':
+          description: Entry not found
+      security:
+        - api_key: []
+  '/v1/entry/vote/{entryId}/1':
+    post:
+      tags:
+        - entry
+      summary: entryi sukelalar
+      operationId: upVote
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid entryid
+        '404':
+          description: Entry not found
+      security:
+        - api_key: []
+  '/v1/entry/vote/{entryId}/-1':
+    post:
+      tags:
+        - entry
+      summary: entrye eksi(-) oy verir
+      operationId: downVote
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid entryid
+        '404':
+          description: Entry not found
+      security:
+        - api_key: []
+  '/v1/entry/vote/{entryId}/remove':
+    post:
+      tags:
+        - entry
+      summary: verilen oyu geri alir
+      operationId: removeVote
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid entryid
+        '404':
+          description: Entry not found
+      security:
+        - api_key: []
+  '/v1/entry/{entryId}/favorites':
+    get:
+      tags:
+        - entry
+      summary: Entryi favorileyen suserları getirtir.
+      operationId: getFavoritedUsers
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/FavoritesResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/v1/entry/{entryId}/caylakfavorites':
+    get:
+      tags:
+        - entry
+      summary: Entryi favorileyen caylakları getirir.
+      operationId: getFavoritedCaylaks
+      produces:
+        - application/json
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/CaylakFavoritesResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+      security:
+        - api_key: []
+  '/v1/message':
+    get:
+      tags:
+        - message
+      summary: mesajlari getirir
+      operationId: getMessages
+      produces:
+        - application/json
+      parameters:
+        - name: p
+          in: query
+          description: Sayfa numarası
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MessagesResponse'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: Message not found
+      security:
+        - api_key: []
+  '/v1/message/send':
+    post:
+      tags:
+        - message
+      summary: Mesaj atar
+      operationId: send
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters: 
+        - name: To
+          type: string
+          in: formData
+        - name: Message
+          type: string
+          in: formData
+        - name: ThreadId
+          type: integer
+          in: formData
+          default: 0
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MessageThread'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: Message not found
+      security:
+        - api_key: []
+  '/v1/message/totalunreadthreadcount':
+    get:
+      tags:
+        - message
+      summary: okunmamis dialog sayisini doner
+      operationId: getUnreadedThreadCount
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+      security:
+        - api_key: []
+  '/v1/message/thread/nick/{nick}':
+    get:
+      tags:
+        - message
+      summary: Suserla olan mesajlari getirir (Page 0 dan basliyor)
+      operationId: getThread
+      parameters:
+        - name: nick
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MessageThread'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: Message not found
+      security:
+        - api_key: []
+  '/v1/message/markread/nick/{nick}':
+    get:
+      tags:
+        - message
+      summary: Mesaji okundu olarak isaretler
+      operationId: markAsRead
+      parameters:
+        - name: nick
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: Message not found
+      security:
+        - api_key: []
+  '/v1/autocomplete/query/{term}':
+    get:
+      tags:
+        - autocomplate
+      summary: hersey icin autocomplate
+      operationId: complete
+      parameters:
+        - name: term
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AutocomplateResponse'
+      security:
+        - api_key: []
+  '/v1/autocomplete/nick/{term}':
+    get:
+      tags:
+        - autocomplate
+      summary: sadece nickler icin autocomplate
+      operationId: completeNick
+      parameters:
+        - name: term
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AutocomplateNickResponse'
+      security:
+        - api_key: []
+  '/v1/settings/get/preferences':
+    get:
+      tags:
+        - settings
+      summary: ayarlari getirir
+      operationId: get
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Settings'
+      security:
+        - api_key: []
+  '/v1/settings/set/preferences':
+    post:
+      tags:
+        - settings
+      summary: ayarlari degistirir
+      operationId: set
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Settings'
+      responses:
+        '200':
+          description: OK
+      security:
+        - api_key: []
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  TokenResponse:
+    type: object
+    properties:
+      access_token:
+        type: string
+      token_type:
+        type: string
+      expires_in:
+        type: integer
+      rank:
+        type: string
+      nick:
+        type: string
+      user_id:
+        type: string
+  Karma:
+    type: object
+    properties:
+      Name:
+        type: string
+      Value:
+        type: integer
+  UserIdentifier:
+    type: object
+    properties:
+      Nick:
+        type: string
+      Id:
+        type: integer
+  UserEntryCounts:
+    type: object
+    properties:
+      Total:
+        type: integer
+      LastMonth:
+        type: integer
+      LastWeek:
+        type: integer
+      Todat:
+        type: integer
+  UserInfo:
+    type: object
+    properties:
+      UserIdentifier:
+        $ref: '#/definitions/UserIdentifier'
+      RemainingInvitation:
+        type: integer
+      TwitterScreenName:
+        type: string
+      FacebookProfileUrl:
+        type: string
+      FacebookScreenName:
+        type: string
+      InstagramScreenName:
+        type: string
+      InstagramProfileUrl:
+        type: string
+      Karma:
+        $ref: '#/definitions/Karma'
+      LastEntryDate:
+        type: string
+        format: DateTime
+      IsCaylak:
+        type: boolean
+      EntryCounts:
+        $ref: '#/definitions/UserEntryCounts'
+  Badges:
+    type: object
+    properties:
+      Name:
+        type: string
+      Description:
+        type: string
+  User:
+    type: object
+    properties:
+      UserInfo:
+        $ref: '#/definitions/UserInfo'
+      Badges:
+        type: array
+        items:
+          $ref: '#/definitions/Badges'
+      HasEntryUsedOnSeyler:
+        type: boolean
+      FollowerCount:
+        type: integer
+      FollowingsCount:
+        type: integer
+      Picture:
+        type: string
+  Author:
+    type: object
+    properties:
+      Nick:
+        type: string
+  Entry:
+    type: object
+    properties:
+      Id:
+        type: integer
+      Content:
+        type: string
+      Author:
+        $ref: '#/definitions/Author'
+      Created:
+        type: string
+        format: DateTime
+      LastUpdated:
+        type: string
+        format: DateTime
+      FavoriteCount:
+        type: integer
+  TopicId:
+    type: object
+    properties:
+      Id:
+        type: integer
+      Title:
+        type: string
+  EntryWithTopic:
+    type: object
+    properties:
+      TopicId:
+        $ref: '#/definitions/TopicId'
+      Entry:
+        $ref: '#/definitions/Entry'
+  GeneralResponse:
+    type: object
+    properties:
+      Entries:
+        type: array
+        items:
+          $ref: '#/definitions/EntryWithTopic'
+      PageCount:
+        type: integer
+      PageSize:
+        type: integer
+      PageIndex:
+        type: integer
+  FavoritesResponse:
+    type: object
+    properties:
+      EntryId:
+        type: integer
+      Authors:
+        type: array
+        items:
+          $ref: '#/definitions/Author'
+      Buddies:
+        type: array
+        items:
+          $ref: '#/definitions/Author'
+  CaylakFavoritesResponse:
+    type: object
+    properties:
+      EntryId:
+        type: integer
+      Caylaks:
+        type: array
+        items:
+          $ref: '#/definitions/Author'
+  QueryData:
+    type: object
+    properties:
+      TopicId:
+        type: integer
+      SuggestedTitle:
+        type: string
+  TopicQueryResponse:
+    type: object
+    properties:
+      Type:
+        type: string
+      RedirectFrom:
+        type: string
+      QueryData:
+        $ref: '#/definitions/QueryData'
+  EntryCounts:
+    type: object
+    properties:
+      BeforeFirstEntry:
+        type: integer
+      AfterLastEntry:
+        type: integer
+      Buddy:
+        type: integer
+      Total:
+        type: integer
+  Topic:
+    type: object
+    properties:
+      Id:
+        type: integer
+      Title:
+        type: string
+      PageCount:
+        type: integer
+      PageSize:
+        type: integer
+      PageIndex:
+        type: integer
+      EntryCounts:
+        $ref: '#/definitions/EntryCounts'
+      DraftEntry:
+        type: boolean
+      IsTracked:
+        type: boolean
+      IsTrackable:
+        type: boolean
+      Slug:
+        type: string
+      Entries:
+        type: array
+        items: 
+          $ref: '#/definitions/Entry'
+  Message:
+    type: object
+    properties:
+      Id:
+        type: integer
+      IsOutgoing:
+        type: boolean
+      Date:
+        type: string
+        format: DateTime
+      Content:
+        type: string
+  Messages:
+    type: object
+    properties:
+      Messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+      PageCount:
+        type: integer
+      PageSize:
+        type: integer
+      PageIndex:
+        type: integer
+      RowCount:
+        type: integer
+  MessageThread:
+    type: object
+    properties:
+      ThreadId:
+        type: integer
+      IsArchive:
+        type: boolean
+      User:
+        $ref: '#/definitions/Author'
+      IsSystem:
+        type: boolean
+      LastRead:
+        type: integer
+      HasUnread:
+        type: boolean
+      AvatarUrl:
+        type: boolean
+      Messages:
+        $ref: '#/definitions/Messages'
+  SummaryMessage:
+    type: object
+    properties:
+      Id:
+        type: integer
+      User:
+        $ref: '#/definitions/Author'
+      RawNick:
+        type: string
+      IsArchive: 
+        type: boolean
+      MaxMessageId:
+        type: integer
+      Unread:
+        type: boolean
+      UnreadCount:
+        type: integer
+      Count:
+        type: integer
+      LastUpdate:
+        type: string
+        format: DateTime
+      Summary:
+        type: string
+      LastUpdateFormatted:
+        type: string
+      AvatarUrl:
+        type: string
+  MessagesResponse:
+    type: object
+    properties:
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/SummaryMessage'
+      PageCount:
+        type: integer
+      PageSize:
+        type: integer
+      PageIndex:
+        type: integer
+  AutocomplateResponse:
+    type: object
+    properties:
+      Titles:
+        type: array
+        items:
+          type: string
+      Query:
+        type: string
+      Nicks:
+        type: array
+        items:
+          type: string
+  AutocomplateNickResponse:
+    type: object
+    properties:
+      Nicks:
+        type: array
+        items:
+          type: string
+  Settings:
+    type: object
+    properties:
+      IndexPageSize:
+        type: integer
+        description: sayfa basina entry sayisi
+      TopicPageSize:
+        type: integer
+        description: sayfa basina baslik sayisi
+      SkipTrash:
+        type: boolean
+      MessagingDisabled:
+        type: boolean
+      OnlyBuddiesCanSendMessage:
+        type: boolean
+      UseDarkTheme:
+        type: boolean
+      SeylerDisallow:
+        type: boolean
+      ThemeId:
+        type: integer
+      ShowFacebookAccount:
+        type: boolean
+      ShowTwitterAccount:
+        type: boolean
+      ShowInstagramAccount:
+        type: boolean
