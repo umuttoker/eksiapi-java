@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **nick** | **String** |  |  [optional]
-**id** | **Integer** |  |  [optional]
+**ıd** | **Integer** |  |  [optional]
 
 
 

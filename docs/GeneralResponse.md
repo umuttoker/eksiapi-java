@@ -4,7 +4,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**entries** | [**List&lt;InlineResponse2001Entries&gt;**](InlineResponse2001Entries.md) |  |  [optional]
+**entries** | [**List&lt;EntryWithTopic&gt;**](EntryWithTopic.md) |  |  [optional]
 **pageCount** | **Integer** |  |  [optional]
 **pageSize** | **Integer** |  |  [optional]
 **pageIndex** | **Integer** |  |  [optional]

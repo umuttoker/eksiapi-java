@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **entryId** | **Integer** |  |  [optional]
-**caylaks** | [**List&lt;InlineResponse2001EntryAuthor&gt;**](InlineResponse2001EntryAuthor.md) |  |  [optional]
+**caylaks** | [**List&lt;Author&gt;**](Author.md) |  |  [optional]
 
 
 

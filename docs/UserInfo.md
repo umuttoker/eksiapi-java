@@ -4,16 +4,17 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**userIdentifier** | [**InlineResponse200UserInfoUserIdentifier**](InlineResponse200UserInfoUserIdentifier.md) |  |  [optional]
+**userIdentifier** | [**UserIdentifier**](UserIdentifier.md) |  |  [optional]
 **remainingInvitation** | **Integer** |  |  [optional]
 **twitterScreenName** | **String** |  |  [optional]
 **facebookProfileUrl** | **String** |  |  [optional]
 **facebookScreenName** | **String** |  |  [optional]
-**instagramScreenName** | **String** |  |  [optional]
-**instagramProfileUrl** | **String** |  |  [optional]
-**karma** | [**InlineResponse200UserInfoKarma**](InlineResponse200UserInfoKarma.md) |  |  [optional]
-**lastEntryDate** | [**DateTime**](DateTime.md) |  |  [optional]
-**isCaylak** | **Boolean** |  |  [optional]
+**ınstagramScreenName** | **String** |  |  [optional]
+**ınstagramProfileUrl** | **String** |  |  [optional]
+**karma** | [**Karma**](Karma.md) |  |  [optional]
+**lastEntryDate** | **String** |  |  [optional]
+**ısCaylak** | **Boolean** |  |  [optional]
+**entryCounts** | [**UserEntryCounts**](UserEntryCounts.md) |  |  [optional]
 
 
 

@@ -4,8 +4,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**userInfo** | [**InlineResponse200UserInfo**](InlineResponse200UserInfo.md) |  |  [optional]
-**badges** | [**List&lt;InlineResponse200Badges&gt;**](InlineResponse200Badges.md) |  |  [optional]
+**userInfo** | [**UserInfo**](UserInfo.md) |  |  [optional]
+**badges** | [**List&lt;Badges&gt;**](Badges.md) |  |  [optional]
 **hasEntryUsedOnSeyler** | **Boolean** |  |  [optional]
 **followerCount** | **Integer** |  |  [optional]
 **followingsCount** | **Integer** |  |  [optional]

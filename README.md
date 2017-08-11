@@ -58,32 +58,28 @@ Please follow the [installation](#installation) instruction and execute the foll
 
 ```java
 
-import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.EntryApi;
+import com.hasssektor.eksiapi.*;
+import com.hasssektor.eksiapi.auth.*;
+import com.hasssektor.eksiapi.models.*;
+import com.hasssektor.eksiapi.apis.AuthApi;
 
 import java.io.File;
 import java.util.*;
 
-public class EntryApiExample {
+public class AuthApiExample {
 
     public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
         
-        // Configure API key authorization: api_key
-        ApiKeyAuth api_key = (ApiKeyAuth) defaultClient.getAuthentication("api_key");
-        api_key.setApiKey("YOUR API KEY");
-        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-        //api_key.setApiKeyPrefix("Token");
-
-        EntryApi apiInstance = new EntryApi();
-        String entryId = "entryId_example"; // String | 
+        AuthApi apiInstance = new AuthApi();
+        String grantType = "password"; // String | 
+        String username = "username_example"; // String | 
+        String password = "password_example"; // String | 
+        String clientSecret = "clientSecret_example"; // String | 
         try {
-            InlineResponse2003 result = apiInstance.entryEntryIdCaylakfavoritesGet(entryId);
+            TokenResponse result = apiInstance.getAccessToken(grantType, username, password, clientSecret);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling EntryApi#entryEntryIdCaylakfavoritesGet");
+            System.err.println("Exception when calling AuthApi#getAccessToken");
             e.printStackTrace();
         }
     }
@@ -93,41 +89,71 @@ public class EntryApiExample {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://api.eksisozluk.com/v1*
+All URIs are relative to *https://api.eksisozluk.com*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*EntryApi* | [**entryEntryIdCaylakfavoritesGet**](docs/EntryApi.md#entryEntryIdCaylakfavoritesGet) | **GET** /entry/{entryId}/caylakfavorites | Entryi favorileyen caylakları getirir.
-*EntryApi* | [**entryEntryIdFavoritesGet**](docs/EntryApi.md#entryEntryIdFavoritesGet) | **GET** /entry/{entryId}/favorites | Entryi favorileyen suserları getirtir.
-*UserApi* | [**getUserByName**](docs/UserApi.md#getUserByName) | **GET** /user/{username} | Suserin tüm bilgilerini getirir.
-*UserApi* | [**userUsernameFavoritedGet**](docs/UserApi.md#userUsernameFavoritedGet) | **GET** /user/{username}/favorited | Suserin favorilenen entrylerini getirir
-*UserApi* | [**userUsernameFavoritesGet**](docs/UserApi.md#userUsernameFavoritesGet) | **GET** /user/{username}/favorites | Suserin favori entrylerini getirir
+*AuthApi* | [**getAccessToken**](docs/AuthApi.md#getAccessToken) | **POST** /token | access token dondurur
+*AutocomplateApi* | [**complete**](docs/AutocomplateApi.md#complete) | **GET** /v1/autocomplete/query/{term} | hersey icin autocomplate
+*AutocomplateApi* | [**completeNick**](docs/AutocomplateApi.md#completeNick) | **GET** /v1/autocomplete/nick/{term} | sadece nickler icin autocomplate
+*EntryApi* | [**downVote**](docs/EntryApi.md#downVote) | **POST** /v1/entry/vote/{entryId}/-1 | entrye eksi(-) oy verir
+*EntryApi* | [**favorite**](docs/EntryApi.md#favorite) | **POST** /v1/entry/{entryId}/favorite | entryi favoriler.
+*EntryApi* | [**getEntry**](docs/EntryApi.md#getEntry) | **GET** /v1/entry/{entryId} | ilgili entryi getirir.
+*EntryApi* | [**getFavoritedCaylaks**](docs/EntryApi.md#getFavoritedCaylaks) | **GET** /v1/entry/{entryId}/caylakfavorites | Entryi favorileyen caylakları getirir.
+*EntryApi* | [**getFavoritedUsers**](docs/EntryApi.md#getFavoritedUsers) | **GET** /v1/entry/{entryId}/favorites | Entryi favorileyen suserları getirtir.
+*EntryApi* | [**removeVote**](docs/EntryApi.md#removeVote) | **POST** /v1/entry/vote/{entryId}/remove | verilen oyu geri alir
+*EntryApi* | [**unfavorite**](docs/EntryApi.md#unfavorite) | **POST** /v1/entry/{entryId}/unfavorite | entryi favorilemeyi birakir.
+*EntryApi* | [**upVote**](docs/EntryApi.md#upVote) | **POST** /v1/entry/vote/{entryId}/1 | entryi sukelalar
+*MessageApi* | [**getMessages**](docs/MessageApi.md#getMessages) | **GET** /v1/message | mesajlari getirir
+*MessageApi* | [**getThread**](docs/MessageApi.md#getThread) | **GET** /v1/message/thread/nick/{nick} | Suserla olan mesajlari getirir (Page 0 dan basliyor)
+*MessageApi* | [**getUnreadedThreadCount**](docs/MessageApi.md#getUnreadedThreadCount) | **GET** /v1/message/totalunreadthreadcount | okunmamis dialog sayisini doner
+*MessageApi* | [**markAsRead**](docs/MessageApi.md#markAsRead) | **GET** /v1/message/markread/nick/{nick} | Mesaji okundu olarak isaretler
+*MessageApi* | [**send**](docs/MessageApi.md#send) | **POST** /v1/message/send | Mesaj atar
+*SettingsApi* | [**get**](docs/SettingsApi.md#get) | **GET** /v1/settings/get/preferences | ayarlari getirir
+*SettingsApi* | [**set**](docs/SettingsApi.md#set) | **POST** /v1/settings/set/preferences | ayarlari degistirir
+*TopicApi* | [**follow**](docs/TopicApi.md#follow) | **GET** /v1/topic/follow/{topicId} | basligi takip et
+*TopicApi* | [**getBuddyEntries**](docs/TopicApi.md#getBuddyEntries) | **GET** /v1/topic/{topicId}/buddies | baslitaki buddy entrylerini getirir
+*TopicApi* | [**getDailyNices**](docs/TopicApi.md#getDailyNices) | **GET** /v1/topic/{topicId}/dailynice | gunun sukelalari
+*TopicApi* | [**getLinks**](docs/TopicApi.md#getLinks) | **GET** /v1/topic/{topicId}/links | baslitaki linkleri getirir
+*TopicApi* | [**getNices**](docs/TopicApi.md#getNices) | **GET** /v1/topic/{topicId}/allnice | tum zamanlarin sukelalari
+*TopicApi* | [**getTopic**](docs/TopicApi.md#getTopic) | **GET** /v1/topic/{topicId} | basligin entrylerini getirir
+*TopicApi* | [**getTopicIdFromSlug**](docs/TopicApi.md#getTopicIdFromSlug) | **GET** /v1/topic/query | textle baslik id si doner
+*TopicApi* | [**search**](docs/TopicApi.md#search) | **GET** /v1/topic/{topicId}/search/{term} | baslikta arar
+*TopicApi* | [**unfollow**](docs/TopicApi.md#unfollow) | **GET** /v1/topic/unfollow/{topicId} | basligi takibi birak
+*UserApi* | [**getBestEntries**](docs/UserApi.md#getBestEntries) | **GET** /v1/user/{username}/bestentries | Suserin en iyi entrylerini getirir
+*UserApi* | [**getFavoriEntries**](docs/UserApi.md#getFavoriEntries) | **GET** /v1/user/{username}/favorites | Suserin favori entrylerini getirir
+*UserApi* | [**getFavoritedEntries**](docs/UserApi.md#getFavoritedEntries) | **GET** /v1/user/{username}/favorited | Suserin favorilenen entrylerini getirir
+*UserApi* | [**getLastVotedEntries**](docs/UserApi.md#getLastVotedEntries) | **GET** /v1/user/{username}/lastvoted | Suserin son oylanan entrylerini getirir
+*UserApi* | [**getSelfFavoritedEntries**](docs/UserApi.md#getSelfFavoritedEntries) | **GET** /v1/user/{username}/selffavorited | Suserin el emegi goznuru entrylerini getirir
+*UserApi* | [**getUserByName**](docs/UserApi.md#getUserByName) | **GET** /v1/user/{username} | Suserin tüm bilgilerini getirir.
 
 
 ## Documentation for Models
 
  - [Author](docs/Author.md)
+ - [AutocomplateNickResponse](docs/AutocomplateNickResponse.md)
+ - [AutocomplateResponse](docs/AutocomplateResponse.md)
  - [Badges](docs/Badges.md)
  - [CaylakFavoritesResponse](docs/CaylakFavoritesResponse.md)
  - [Entry](docs/Entry.md)
+ - [EntryCounts](docs/EntryCounts.md)
  - [EntryWithTopic](docs/EntryWithTopic.md)
  - [FavoritesResponse](docs/FavoritesResponse.md)
  - [GeneralResponse](docs/GeneralResponse.md)
- - [InlineResponse200](docs/InlineResponse200.md)
- - [InlineResponse2001](docs/InlineResponse2001.md)
- - [InlineResponse2001Entries](docs/InlineResponse2001Entries.md)
- - [InlineResponse2001Entry](docs/InlineResponse2001Entry.md)
- - [InlineResponse2001EntryAuthor](docs/InlineResponse2001EntryAuthor.md)
- - [InlineResponse2001TopicId](docs/InlineResponse2001TopicId.md)
- - [InlineResponse2002](docs/InlineResponse2002.md)
- - [InlineResponse2003](docs/InlineResponse2003.md)
- - [InlineResponse200Badges](docs/InlineResponse200Badges.md)
- - [InlineResponse200UserInfo](docs/InlineResponse200UserInfo.md)
- - [InlineResponse200UserInfoKarma](docs/InlineResponse200UserInfoKarma.md)
- - [InlineResponse200UserInfoUserIdentifier](docs/InlineResponse200UserInfoUserIdentifier.md)
  - [Karma](docs/Karma.md)
+ - [Message](docs/Message.md)
+ - [MessageThread](docs/MessageThread.md)
+ - [Messages](docs/Messages.md)
+ - [MessagesResponse](docs/MessagesResponse.md)
+ - [QueryData](docs/QueryData.md)
+ - [Settings](docs/Settings.md)
+ - [SummaryMessage](docs/SummaryMessage.md)
+ - [TokenResponse](docs/TokenResponse.md)
+ - [Topic](docs/Topic.md)
  - [TopicId](docs/TopicId.md)
+ - [TopicQueryResponse](docs/TopicQueryResponse.md)
  - [User](docs/User.md)
+ - [UserEntryCounts](docs/UserEntryCounts.md)
  - [UserIdentifier](docs/UserIdentifier.md)
  - [UserInfo](docs/UserInfo.md)
 
@@ -148,5 +174,5 @@ It's recommended to create an instance of `ApiClient` per thread in a multithrea
 
 ## Author
 
-reklam@eksisozluk.com
+umt.toker@gmail.com
 
